@@ -19,7 +19,7 @@ export function SenderBlock({ fromChain, amount, status }: {
                 <div
                     className="text-3xl"
                 >
-                    ${amount} <span className="text-lg">USDC</span>
+                    ${amount.toFixed(2)} <span className="text-lg">USDC</span>
                 </div>
             </div>
             <div
