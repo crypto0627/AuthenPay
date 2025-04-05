@@ -23,9 +23,10 @@ export default function Home() {
             setAddress("0x")
             router.push('/');
         } else {
+            console.log(me)
             accountInit({
-                id: me?.keyId as any,
-                publicKey: me?.pubKey as any
+                id: me?.id as any,
+                publicKey: me?.publicKey as any
             })
         }
     }, [isMounted])
