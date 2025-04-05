@@ -216,7 +216,6 @@ app.post('/history', async (c) => {
           const timestamp = await fetchBlockData(result.chain, transfer.blockNum);
           
           return {
-            blockNum: transfer.blockNum,
             hash: transfer.hash,
             from: transfer.from,
             to: transfer.to,
@@ -228,7 +227,7 @@ app.post('/history', async (c) => {
         
         return {
           chain: result.chain,
-          transfers: formattedTransfers
+          data: formattedTransfers
         };
       });
       
