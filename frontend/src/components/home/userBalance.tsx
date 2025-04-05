@@ -26,7 +26,7 @@ export function UserBalance({ address }: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    address: '0x5C16e64Eac8bf0e8CE0d6f6eAb0b73918cfB0a96'
+                    address: userAddress
                 }),
             });
             
