@@ -20,9 +20,9 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   icons: [
     {
-      "url": '/logo-authenpay.png',
+      "url": '/logo.jpg',
       "sizes": '192x192',
-      "type": 'image/png'
+      "type": 'image/jpg'
     }
   ]
 };
