@@ -1,5 +1,6 @@
 import { Hono } from 'hono'
 import { AlchemyHistoryResponse, AlchemyResponse, BlockResponse, ChainResult, HistoryResult, Transfer } from './types'
+import { ethers } from 'ethers';
 
 const app = new Hono()
 
@@ -218,6 +219,27 @@ app.post('/history', async (c) => {
   } catch (error) {
     console.error('Error in /history endpoint:', error);
     return c.json({ error: 'Failed to fetch transfer history', message: (error as Error).message }, 500);
+  }
+})
+
+app.get('/ens', async (c) => {
+  try {
+    const { address } = await c.req.json();
+    
+    if (!address) {
+      return c.json({ error: 'Address is required' }, 400);
+    }
+    
+    const provider = new ethers.JsonRpcProvider("https://eth-mainnet.g.alchemy.com/v2/hR5uamq-K43YZYAJldc7lpxZ2MOv0Qbk");
+    const ensName = await provider.lookupAddress(address);
+    
+    return c.json({ 
+      originalAddress: address,
+      ensName: ensName ?? address
+    });
+  } catch (error) {
+    console.error('Error in /ens endpoint:', error);
+    return c.json({ error: 'Failed to lookup ENS name', message: (error as Error).message }, 500);
   }
 })
 
