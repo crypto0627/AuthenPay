@@ -14,7 +14,7 @@ import { ChevronLeftIcon } from 'lucide-react';
 export default function Send() {
     const router = useRouter();
 
-    const { isMounted, me } = useMe()
+    const { isMounted, me, address } = useMe()
     
     const [isConfirm, setIsConfirm] = useState<boolean>(false)
     const [selected, setSelected] = useState<'base' | 'eth' | 'ava' | 'polygon' | 'arb'>('base');
@@ -65,7 +65,7 @@ export default function Send() {
                             <button
                                 className="px-6 py-3 text-black cursor-pointer button-35 w-[120px]"
                                 onClick={async () => {
-                                    const res = await transferAggr(transferDatas, { id: me?.id as any, publicKey: me?.publicKey as any }, setProcessCount)
+                                    const res = await transferAggr( address, transferDatas, { id: me?.id as any, publicKey: me?.publicKey as any }, setProcessCount)
                                     console.log(res)
                                     setIsComplete(true)
                                 }}

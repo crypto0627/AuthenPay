@@ -20,17 +20,6 @@ export function UserBalance({ address }: {
       day: 'numeric',
     });
 
-    useEffect(() => {
-        const fetchBalance = async () => {
-            await getBalance()
-            if (balance) {
-                const sum = Object.values(balance).reduce((acc, val) => acc + val, 0);
-                setTotalBalance(sum);
-            }
-        }
-        fetchBalance()
-    }, [balance]);
-
     return (
         <div
             className="w-[330px] h-[150px] rounded-[20px] glass p-6 text-black flex items-center"

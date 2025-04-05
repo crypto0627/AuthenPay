@@ -1,11 +1,13 @@
 import { transferData } from "@/transferStrategy";
 import { transferUSDC } from "./transfer";
 import { chainNameMap } from "@/utils";
-import { Hex } from "viem";
+import { Address, Hex } from "viem";
 import { TransferCCTP } from "../CCTPV2/CCTPV2";
 import { Dispatch, SetStateAction } from "react";
+import { storeRecord } from "@/services/record";
 
 export async function transferAggr(
+    from: Address,
     transferDatas: transferData, 
     credential: {
         id: string,
@@ -41,6 +43,16 @@ export async function transferAggr(
                     chainNameMap[tx.toChain],
                     credential
                 )
+                const rr = await storeRecord({
+                    FromAddress: from,
+                    ToAddress: tx.receiver,
+                    FromChain: tx.fromChain,
+                    ToChain: tx.toChain,
+                    TxHash: txHash,
+                    Amount: (tx.amount).toString(10),
+                    CCTP: false,
+                    Status: 2,
+                } as any)
                 txHashs.push(txHash)
             } else {
                 //CCTP
@@ -53,6 +65,16 @@ export async function transferAggr(
                         credential: credential
                     }
                 )
+                const rr = await storeRecord({
+                    FromAddress: from,
+                    ToAddress: tx.receiver,
+                    FromChain: tx.fromChain,
+                    ToChain: tx.toChain,
+                    TxHash: txHash,
+                    Amount: (tx.amount).toString(10),
+                    CCTP: true,
+                    Status: 1,
+                } as any)
                 txHashs.push(txHash)
             }
         }
