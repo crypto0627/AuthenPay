@@ -42,8 +42,7 @@ export default function Home() {
             <FeatureList />
             <div className="w-full h-full flex flex-col">
                 <Checkout activeTab={activeTab} setActiveTab={setActiveTab} />
-                <div className="w-full h-[1px] bg-gray-200 my-2"></div>
-                <div className="flex overflow-y-auto max-h-[180px] w-full">
+                <div className="flex w-full my-2">
                     <Transaction activeTab={activeTab} address={address}/>
                 </div>
             </div>

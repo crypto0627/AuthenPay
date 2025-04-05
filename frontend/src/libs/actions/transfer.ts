@@ -18,7 +18,7 @@ export async function transferUSDC(
     const transferCallData = encodeFunctionData({
         abi: erc20Abi,
         functionName: 'transfer',
-        args: [to, (amount as any * 1000000) as any],
+        args: [to, (amount as any * 1000000n) as any],
     })
 
     const transactionHash = await pimlicoUSDCPaymaster({

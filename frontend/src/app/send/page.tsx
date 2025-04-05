@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react';
 import { Sender } from '@/components/transfer/sender';
 import { transferData } from '@/transferStrategy';
+import { transferAggr } from '@/libs/actions/transferAggr';
 
 export default function Send() {
     const router = useRouter();
@@ -56,15 +57,7 @@ export default function Send() {
                             <button
                                 className="px-6 py-3 text-black cursor-pointer button-35 w-[120px]"
                                 onClick={async () => {
-                                    transferUSDC(
-                                        receiverAddr as any,
-                                        amount as any,
-                                        chainNameMap[selected],
-                                        {
-                                            id: me?.id as any,
-                                            publicKey: me?.publicKey as any
-                                        }
-                                    )
+                                    const res = await transferAggr(transferDatas, { id: me?.id as any, publicKey: me?.publicKey as any })
                                 }}
                                 disabled={transferDatas.length == 0}
                             >
