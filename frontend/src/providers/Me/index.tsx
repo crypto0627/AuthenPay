@@ -1,6 +1,8 @@
 "use client";
 
+import { record } from "@/services/record";
 import { userBalanceData } from "@/services/userBalance";
+import { TransactionRecord } from "@/types/record";
 import { createContext, useContext, useEffect, useState } from "react";
 import { Address, createPublicClient, http } from "viem";
 import { createWebAuthnCredential, toCoinbaseSmartAccount, toWebAuthnAccount } from "viem/account-abstraction";
@@ -25,6 +27,7 @@ function useMeHook() {
       "arb": 0
     }
   )
+  const [records, setRecords] = useState<TransactionRecord[]>()
 
   function disconnect() {
     localStorage.removeItem("walletCredential");
@@ -53,8 +56,9 @@ function useMeHook() {
     setIsLoading(false)
   }
 
-  async function get() {
-    
+  async function getRecords(addr: Address) {
+    const res = await record(addr)
+    setRecords(res)
   }
 
   async function getBalance(addr: Address) {
@@ -78,6 +82,7 @@ function useMeHook() {
     })
     setAddress(account.address)
     getBalance(account.address)
+    getRecords(account.address)
   }
 
   useEffect(() => {
@@ -102,7 +107,8 @@ function useMeHook() {
     create,
     disconnect,
     address,
-    balance
+    balance,
+    records
   };
 }
 

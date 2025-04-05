@@ -13,7 +13,10 @@ export default function Receive() {
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [chain, setChain] = useState<'base' | 'eth' | 'ava' | 'polygon' | 'arb'>('base')
     const [copied, setCopied] = useState(false)
-    
+    const [receiver, setReceiver] = useState<string>("")
+    const [amount, setAmount] = useState<number | "">()
+    const [isConfirm, setIsConfirm] = useState<boolean>(false)
+
     const chainOptions = [
         { value: 'base', label: 'Base' },
         { value: 'eth', label: 'Ethereum' },
@@ -42,40 +45,99 @@ export default function Receive() {
                 Receive USDC
             </div>
             <div className='flex flex-col items-center justify-center gap-4'>
-                <div className='p-4 w-[200px] h-[50px] bg-gray-200/50 rounded-xl'>
-                    <div className='flex flex-row items-center justify-center relative w-full cursor-pointer' onClick={() => setIsOpen(!isOpen)}>
-                        <span className='text-black font-medium'>
-                            {chainOptions.find(option => option.value === chain)?.label}
-                        </span>
-                        <div className='absolute right-0'>
-                            {isOpen ? <ChevronUpIcon className='w-4 h-4 text-gray-400' /> : <ChevronDownIcon className='w-4 h-4 text-gray-400' />}
+
+                {
+                    isConfirm ?
+                    <div className='flex flex-col w-full h-full p-4 items-center bg-gray-200 gap-2 rounded-xl'>
+                        <div className='w-[300px] h-[300px]'>
+                            <QRCodeSVG value={`https://authen-pay.vercel.app/send?chain=${chain}&receiver=${address}&amount=${amount}`} size={300} />
+                        </div>
+                        <div className='text-gray-400 text-sm'>
+                            Scan the QR code to receive USDC
                         </div>
                     </div>
-                    {isOpen && (
-                        <div className='absolute mt-2 w-[200px] bg-white shadow-lg rounded-xl z-10'>
-                            {chainOptions.map((option) => (
+                    :
+                    <div className="w-full flex flex-col gap-4 my-4 items-center">
+                        <div
+                            className="p-[2px] rounded-[12px] border border-white w-[300px]"
+                            style={{
+                                background: "linear-gradient(-225deg, #E3FDF5 0%, #FFE6FA 100%)"
+                            }}
+                        >
+                            <div className="relative">
                                 <div 
-                                    key={option.value} 
-                                    className='py-2 hover:bg-gray-100 cursor-pointer text-black text-center'
-                                    onClick={() => {
-                                        setChain(option.value as any);
-                                        setIsOpen(false);
-                                    }}
+                                    className="px-4 py-2 text-black bg-gray-200/20 rounded-[10px] w-full flex justify-between items-center cursor-pointer"
+                                    onClick={() => setIsOpen(!isOpen)}
                                 >
-                                    {option.label}
+                                    <span>{chainOptions.find(option => option.value === chain)?.label}</span>
+                                    {isOpen ? 
+                                        <ChevronUpIcon className="w-5 h-5" /> : 
+                                        <ChevronDownIcon className="w-5 h-5" />
+                                    }
                                 </div>
-                            ))}
+                                {isOpen && (
+                                    <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-[10px] shadow-lg z-10 text-black">
+                                        {chainOptions.map((option) => (
+                                            <div 
+                                                key={option.value}
+                                                className="px-4 py-2 hover:bg-gray-100 cursor-pointer first:rounded-t-[10px] last:rounded-b-[10px]"
+                                                onClick={() => {
+                                                    setChain(option.value as any);
+                                                    setIsOpen(false);
+                                                }}
+                                            >
+                                                {option.label}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                    )}
-                </div>
-                <div className='flex flex-col w-full h-full p-4 items-center bg-gray-200 gap-2 rounded-xl'>
-                    <div className='w-[300px] h-[300px]'>
-                        <QRCodeSVG value={`/${chain}`} size={300} />
+                        <div
+                        className="p-[2px] rounded-[12px] border border-white w-[300px]"
+                        style={{
+                            background: "linear-gradient(-225deg, #E3FDF5 0%, #FFE6FA 100%)"
+                        }}
+                        >
+                            <input
+                                className="px-4 py-2 text-black bg-gray-200/20 rounded-[10px] w-full"
+                                value={amount}
+                                type="number"
+                                onChange={(e) => {
+                                    if(Number(e.target.value) > 0) {
+                                        setAmount(Number(e.target.value))
+                                    } else {
+                                        setAmount("")
+                                    }
+                                }}
+                                placeholder="Amount"
+                            />
+                        </div>
+                        <button
+                            className="px-6 py-3 text-black cursor-pointer button-35 w-[120px]"
+                            onClick={() => {
+                                if(typeof(amount) == "number") {
+                                    setIsConfirm(true)
+                                }
+                            }}
+                        >
+                            Comfirm
+                        </button>
                     </div>
-                    <div className='text-gray-400 text-sm'>
-                        Scan the QR code to receive USDC
+                }
+                {
+                    isConfirm &&
+                    <div className="w-full flex flex-col items-center">
+                        <button
+                            className="px-6 py-2 text-black cursor-pointer button-35 w-[180px]"
+                            onClick={() => {
+                                setIsConfirm(false)
+                            }}
+                        >
+                            Edit
+                        </button>
                     </div>
-                </div>
+                }
                 <div 
                     className='flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-lg cursor-pointer hover:bg-blue-100 transition-colors'
                     onClick={handleCopy}

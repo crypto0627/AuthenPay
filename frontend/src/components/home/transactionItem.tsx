@@ -1,15 +1,19 @@
 import React from 'react';
 import { ArrowUpRight, ArrowDownLeft } from "lucide-react";
+import { formatAddress, formatTimestamp } from '@/utils';
 
 interface TransactionItemProps {
-    method: "To" | "From";
+    method: boolean
     date: string;
-    status: "Pending" | "Success" | "Failed";
+    status: number;
     amount: string;
     ens: string;
+    address: string
 }
 
-export default function TransactionItem({ method, date, status, amount, ens }: TransactionItemProps) {
+const statusList: string[] = ["", "Pending", "Success"]
+
+export default function TransactionItem({ method, date, status, amount, ens, address }: TransactionItemProps) {
     const getStatusColor = (status: string) => {
         switch (status) {
             case "Pending":
@@ -27,23 +31,23 @@ export default function TransactionItem({ method, date, status, amount, ens }: T
         <div className="mb-3 p-3 bg-gray-50 rounded-lg flex items-center justify-between text-black w-full">
             <div className="flex items-center gap-3">
                 <div className="flex-shrink-0">
-                    {method === "To" ? <ArrowUpRight /> : <ArrowDownLeft />}
+                    {method ? <ArrowUpRight /> : <ArrowDownLeft />}
                 </div>
-                <div className="flex flex-col">
-                    <div className="flex items-start gap-2">
-                        <span className={`text-lg font-medium text-black w-12`}>
-                            {method}
+                <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-2 h-8">
+                        <span className={`text-lg font-medium text-black`}>
+                            {method ? "To" : "From"}
                         </span>
-                        <span className={`text-xs px-2 py-1 rounded-full ${getStatusColor(status)}`}>
-                            {status}
+                        <span className={`text-xs px-2 py-1 rounded-full ${getStatusColor(statusList[status])}`}>
+                            {statusList[status]}
                         </span>
                     </div>
-                    <p className="text-xs text-gray-500">{date}</p>
+                    <p className="text-xs text-gray-500">{formatTimestamp(date)}</p>
                 </div>
             </div>
-            <div className="flex flex-col items-end">
-                <p className="font-bold text-2xl">{amount}</p>
-                <span className="text-sm text-gray-500">{ens}</span>
+            <div className="flex flex-col items-end gap-2">
+                <p className="font-bold text-2xl">{amount}<span className='ml-2 text-lg'>USDC</span></p>
+                <span className="text-sm text-gray-500">{formatAddress(address)}</span>
             </div>
         </div>
     );

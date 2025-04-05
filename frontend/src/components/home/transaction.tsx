@@ -6,8 +6,8 @@ import ChainItem from "./chainItem";
 import TransactionItem from "./transactionItem";
 import { Chain, Transaction_Form } from "@/types/transaction-type";
 
-export default function Transaction({ activeTab, address }: { activeTab: "balance" | "transactions", address: string }) {
-    const { balance } = useMe();
+export default function Transaction({ activeTab }: { activeTab: "balance" | "transactions", address: string }) {
+    const { balance, records, address } = useMe();
     const [chains, setChains] = useState<Chain[]>([
         {
             name: "Base",
@@ -40,45 +40,6 @@ export default function Transaction({ activeTab, address }: { activeTab: "balanc
             currency: "USDC"
         }
     ]);
-
-
-    const transactions: Transaction_Form[] = [
-        {
-            method: "To",
-            date: "Today, 12:00 PM",
-            status: "Pending",
-            amount: "$2000",
-            ens: "jakekuo.eth"
-        },
-        {
-            method: "From",
-            date: "Today, 12:00 PM",
-            status: "Success",
-            amount: "$2000",
-            ens: "jakekuo.eth"
-        },
-        {
-            method: "To",
-            date: "Today, 12:00 PM",
-            status: "Failed",
-            amount: "$2000",
-            ens: "jakekuo.eth"
-        },
-        {
-            method: "From",
-            date: "Today, 12:00 PM",
-            status: "Success",
-            amount: "$2000",
-            ens: "jakekuo.eth"
-        },
-        {
-            method: "To",
-            date: "Today, 12:00 PM",
-            status: "Success",
-            amount: "$2000",
-            ens: "jakekuo.eth"
-        }
-    ];
 
     useEffect(() => {
         const fetchAndUpdateBalances = async () => {
@@ -132,14 +93,15 @@ export default function Transaction({ activeTab, address }: { activeTab: "balanc
                 </div>
             ) : (
                 <div className="px-4 py-2 w-full max-w-full">
-                    {transactions.map((transaction: Transaction_Form, index: number) => (
+                    {records && records.map((tx: any, index: number) => (
                         <TransactionItem
                             key={index}
-                            method={transaction.method}
-                            date={transaction.date}
-                            status={transaction.status}
-                            amount={transaction.amount}
-                            ens={transaction.ens}
+                            method={tx.fromaddress == address}
+                            date={tx.created_at}
+                            status={tx.status}
+                            amount={tx.amount}
+                            ens={tx.ToAddress}
+                            address={tx.fromaddress == address ? tx.toaddress: tx.fromaddress}
                         />
                     ))}
                 </div>
