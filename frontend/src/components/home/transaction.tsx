@@ -7,7 +7,7 @@ import TransactionItem from "./transactionItem";
 import { Chain, Transaction_Form } from "@/types/transaction-type";
 
 export default function Transaction({ activeTab, address }: { activeTab: "balance" | "transactions", address: string }) {
-    const { getBalance, balance } = useMe();
+    const { balance } = useMe();
     const [chains, setChains] = useState<Chain[]>([
         {
             name: "Base",
@@ -83,7 +83,6 @@ export default function Transaction({ activeTab, address }: { activeTab: "balanc
     useEffect(() => {
         const fetchAndUpdateBalances = async () => {
             try {
-                await getBalance()
                 if (balance) {
                     const chainMapping: { [key: string]: string } = {
                         'base': 'Base',
@@ -100,7 +99,7 @@ export default function Transaction({ activeTab, address }: { activeTab: "balanc
                             
                             return {
                                 ...chain,
-                                balance: `$${chainBalance}`
+                                balance: `$${chainBalance.toPrecision(2)}`
                             };
                         });
                         return updatedChains;

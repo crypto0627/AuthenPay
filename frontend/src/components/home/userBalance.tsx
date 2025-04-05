@@ -3,21 +3,20 @@
 import { useEffect, useState } from "react";
 import { Address } from "viem";
 import { useMe } from "@/providers/Me";
-import { get } from "http";
 
 export function UserBalance({ address }: {
     address: Address
 }) {
-    const { balance, getBalance } = useMe();
+    const { balance } = useMe();
     const [totalBalance, setTotalBalance] = useState<number>(0);
 
     const now = new Date(); // current date
     const date = new Date(now.getTime() + 8 * 60 * 60 * 1000);
 
     const formatted = date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
     });
 
     return (
@@ -27,14 +26,12 @@ export function UserBalance({ address }: {
             <div className="w-full flex flex-col gap-3">
                 <div className="text-sm">{formatted}</div>
                 <div className="w-full flex items-end justify-end text-4xl">
-                <div>
-                    {`$${totalBalance < 1000000 ? totalBalance.toFixed(2) : totalBalance.toFixed(0)}`}
-                </div>
-                <div
-                    className="text-xl ml-[12px]"
-                >
-                    USDC
-                </div>
+                    <div>
+                        {`$${totalBalance < 1000000 ? totalBalance.toFixed(2) : totalBalance.toFixed(0)}`}
+                    </div>
+                    <div className="text-xl ml-[12px]">
+                        USDC
+                    </div>
                 </div>
                 <div className="text-sm">
                     Total balance
