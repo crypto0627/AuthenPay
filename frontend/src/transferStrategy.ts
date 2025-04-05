@@ -63,6 +63,7 @@ export function buildTransferPlan(
     chains: chain[],
     needed: number
   ): { fromChain: chain; amount: number }[] | null {
+    console.log("AAA")
     // Sort chains by descending balance so we pick from largest first
     const candidates = chains
       .map((chain) => ({
