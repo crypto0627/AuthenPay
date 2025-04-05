@@ -34,7 +34,7 @@ export default function Send() {
             >
                 <ChevronLeftIcon className="w-8 h-8 text-gray-400" />
             </div>
-            <div className="text-black text-2xl text-center">
+            <div className="w-[330px] text-black text-2xl text-center">
                 Transfer USDC
             </div>
             {
@@ -79,8 +79,18 @@ export default function Send() {
             }
             {
                 complete &&
-                <div className='py-12 text-4xl'>
-                    Good Good
+                <div className='flex flex-col items-center'>
+                    <div className='h-[400px] py-36 text-4xl text-black text-center'>
+                        Transaction sent successfully!
+                    </div>
+                    <button
+                        className="px-6 py-3 text-black cursor-pointer button-35 w-[120px]"
+                        onClick={async () => {
+                            router.push('/home');
+                        }}
+                    >
+                        Back
+                    </button>
                 </div>
             }
         </div>
