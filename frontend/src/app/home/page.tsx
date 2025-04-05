@@ -12,41 +12,21 @@ import { Checkout } from "@/components/home/checkout";
 
 export default function Home() {
 
-    const { isMounted, me } = useMe()
-    const [address, setAddress] = useState<Address>("0x")
+    const { isMounted, me, address, balance } = useMe()
     const [activeTab, setActiveTab] = useState<"balance" | "transactions">("balance");
 
     const router = useRouter();
 
+    console.log(address)
+    console.log(balance)
+
     useEffect(() => {
         if(!isMounted) {
-            setAddress("0x")
             router.push('/');
         } else {
             console.log(me)
-            accountInit({
-                id: me?.id as any,
-                publicKey: me?.publicKey as any
-            })
         }
     }, [isMounted])
-
-    async function accountInit(credential: {
-        id: string,
-        publicKey: `0x${string}`
-    }) {
-        const publicClient = createPublicClient({
-            chain: baseSepolia,
-            transport: http("https://sepolia.base.org"),
-        })
-        
-        const owner = toWebAuthnAccount({ credential })
-        const account = await toCoinbaseSmartAccount({ 
-            client: publicClient, 
-            owners: [owner], 
-        })
-        setAddress(account.address)
-    }
 
     return (
         <div className="w-full px-2 sm:px-8 py-16 flex flex-col items-center gap-[24px]">

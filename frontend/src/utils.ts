@@ -16,6 +16,14 @@ export const chainNameMap: Record<string, Chain> = {
     arb: arbitrumSepolia,
     eth: sepolia,
     polygon: polygonAmoy,
+};
+
+export const chainNameMapAPI: Record<string, string> = {
+    "base-sepolia": "base",
+    'avalanche-fuji': "ava",
+    'arbitrum-sepolia': "arb",
+    "sepolia": "eth",
+    'polygon-amoy': "polygon",
   };
 
 export const isValidChain = (value: string | null): boolean => {

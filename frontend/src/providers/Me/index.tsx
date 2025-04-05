@@ -1,8 +1,10 @@
 "use client";
 
+import { userBalanceData } from "@/services/userBalance";
 import { createContext, useContext, useEffect, useState } from "react";
-import { Address } from "viem";
-import { createWebAuthnCredential } from "viem/account-abstraction";
+import { Address, createPublicClient, http } from "viem";
+import { createWebAuthnCredential, toCoinbaseSmartAccount, toWebAuthnAccount } from "viem/account-abstraction";
+import { baseSepolia } from "viem/chains";
 
 export type Me = {
   id: string;
@@ -13,6 +15,16 @@ function useMeHook() {
   const [isLoading, setIsLoading] = useState(false);
   const [me, setMe] = useState<Me | null>();
   const [isMounted, setIsMounted] = useState(false);
+  const [address, setAddress] = useState<Address>("0x")
+  const [balance, setBalance] = useState<Record<string, number>>(
+    {
+      "base": 0,
+      "eth": 0,
+      "ava": 0,
+      "polygon": 0,
+      "arb": 0
+    }
+  )
 
   function disconnect() {
     localStorage.removeItem("walletCredential");
@@ -34,6 +46,8 @@ function useMeHook() {
       
       setMe({ id: credential.id, publicKey: credential.publicKey })
       setIsMounted(true)
+      getAddress({ id: credential.id, publicKey: credential.publicKey})
+      getBalance()
     } catch(e) {
       console.log("User reject the request QAQ")
     }
@@ -44,12 +58,37 @@ function useMeHook() {
     
   }
 
+  async function getBalance() {
+    const _balance = await userBalanceData("0xa238EA849895BE20A96b6181D5b2ba167eBa2Db7")
+    setBalance(_balance)
+  }
+
+  async function getAddress(credential: {
+    id: string,
+    publicKey: `0x${string}`
+  }) {
+    const publicClient = createPublicClient({
+      chain: baseSepolia,
+      transport: http("https://sepolia.base.org"),
+    })
+    
+    const owner = toWebAuthnAccount({ credential })
+    const account = await toCoinbaseSmartAccount({ 
+      client: publicClient, 
+      owners: [owner], 
+    })
+    setAddress(account.address)
+  }
+
   useEffect(() => {
     const me = localStorage.getItem("walletCredential")
     if (me) {
       try {
-        setMe(JSON.parse(me));
+        const parsed = JSON.parse(me)
+        setMe(parsed);
         setIsMounted(true);
+        getAddress({ id: parsed.id, publicKey: parsed.publicKey})
+        getBalance()
       } catch (e) {
         console.log("error while parsing me");
       }
@@ -62,6 +101,8 @@ function useMeHook() {
     me,
     create,
     disconnect,
+    address,
+    balance
   };
 }
 
