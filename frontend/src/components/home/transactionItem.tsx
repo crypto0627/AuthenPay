@@ -46,7 +46,7 @@ export default function TransactionItem({ method, date, status, amount, ens, add
                 </div>
             </div>
             <div className="flex flex-col items-end gap-2">
-                <p className="font-bold text-2xl">{amount}<span className='ml-2 text-lg'>USDC</span></p>
+                <p className="font-bold text-2xl">{(Number(amount).toFixed(2))}<span className='ml-2 text-lg'>USDC</span></p>
                 <span className="text-sm text-gray-500">{formatAddress(address)}</span>
             </div>
         </div>
