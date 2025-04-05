@@ -1,8 +1,8 @@
 import { TransactionRecord } from "@/types/record";
 import { Address } from "viem";
 
-//const HOST = "https://chat.boringchats.xyz"
-const HOST = "http://127.0.0.1:5001"
+const HOST = "https://chat.boringchats.xyz"
+//const HOST = "http://127.0.0.1:5001"
 
 console.log(HOST)
 export const storeRecord = async (record: TransactionRecord): Promise<boolean> => {
@@ -35,9 +35,11 @@ export const record = async (address: Address): Promise<TransactionRecord[]> => 
             },
         });
 
-        console.log(response.json())
+        const res = await response.json()
 
-        return response.json()
+        console.log(res)
+
+        return res
     } catch (error) {
         console.error('Error fetching balance:', error);
         return []

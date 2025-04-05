@@ -60,3 +60,27 @@ function addOneUpToN(arr: number[], n: number): number[] {
   
   return arr;
 }
+
+export function formatTimestamp(isoString: string): string {
+  const date = new Date(isoString);
+
+  const now = new Date();
+  const isToday =
+    date.getUTCFullYear() === now.getUTCFullYear() &&
+    date.getUTCMonth() === now.getUTCMonth() &&
+    date.getUTCDate() === now.getUTCDate();
+
+  const hours = date.getUTCHours().toString().padStart(2, '0');
+  const minutes = date.getUTCMinutes().toString().padStart(2, '0');
+
+  const time = `${hours}:${minutes}`;
+
+  if (isToday) {
+    return `Today, ${time}`;
+  }
+
+  const monthShort = date.toLocaleString('en-US', { month: 'short', timeZone: 'UTC' });
+  const day = date.getUTCDate();
+
+  return `${monthShort} ${day}, ${time}`;
+}

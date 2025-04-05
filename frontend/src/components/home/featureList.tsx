@@ -8,8 +8,8 @@ export function FeatureList() {
         >
             <FeatureBlock feature="Send" icon="send" route="send"/>
             <FeatureBlock feature="Receive" icon="receive" route="receive"/>
-            <FeatureBlock feature="Swap" icon="swap" route="swap"/>
-            <FeatureBlock feature="Earn" icon="earn" route="earn"/>
+            <FeatureBlock feature="Swap" icon="swap" route=""/>
+            <FeatureBlock feature="Earn" icon="earn" route=""/>
         </div>
     )
 }
