@@ -1,14 +1,18 @@
 "use client"
 import { useRouter } from 'next/navigation'
 import { useState } from 'react';
-import { ChevronLeftIcon, ChevronUpIcon, ChevronDownIcon } from 'lucide-react';
+import { ChevronLeftIcon, ChevronUpIcon, ChevronDownIcon, Copy } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
+import { tapToCopy, formatAddress } from '@/utils';
+import { useMe } from '@/providers/Me'
 
 export default function Receive() {
+    const { address } = useMe()
     const router = useRouter();
 
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [chain, setChain] = useState<'base' | 'eth' | 'ava' | 'polygon' | 'arb'>('base')
+    const [copied, setCopied] = useState(false)
     
     const chainOptions = [
         { value: 'base', label: 'Base' },
@@ -17,6 +21,12 @@ export default function Receive() {
         { value: 'polygon', label: 'Polygon' },
         { value: 'arb', label: 'Arbitrum' }
     ]
+
+    const handleCopy = () => {
+        tapToCopy(address);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    }
 
     return (
         <div className="relative py-6 flex flex-col items-center gap-4">
@@ -65,6 +75,14 @@ export default function Receive() {
                     <div className='text-gray-400 text-sm'>
                         Scan the QR code to receive USDC
                     </div>
+                </div>
+                <div 
+                    className='flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-lg cursor-pointer hover:bg-blue-100 transition-colors'
+                    onClick={handleCopy}
+                >
+                    <span className='text-blue-600 font-medium'>{formatAddress(address)}</span>
+                    <Copy className='w-4 h-4 text-blue-600' />
+                    {copied && <span className="text-green-500 text-sm ml-2">Copied!</span>}
                 </div>
             </div>
         </div>
