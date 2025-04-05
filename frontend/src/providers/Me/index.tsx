@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
+import { Address } from "viem";
 import { createWebAuthnCredential } from "viem/account-abstraction";
 
 export type Me = {
@@ -30,6 +31,7 @@ function useMeHook() {
           publicKey: credential.publicKey
       })
       localStorage.setItem("walletCredential", jsonn)
+      
       setMe({ keyId: credential.id, pubKey: credential.publicKey })
       setIsMounted(true)
     } catch(e) {

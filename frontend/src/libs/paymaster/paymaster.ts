@@ -27,8 +27,8 @@ export async function pimlicoUSDCPaymaster({ credential, chain, rawCalls }: {
     const pimlicoUrl = `https://api.pimlico.io/v2/${chain.id}/rpc?apikey=pim_63u8N8Lfj9im3rVggEbqtS`
 
     const publicClient = createPublicClient({
-        chain,
-        transport: http("https://sepolia.base.org"),
+        chain: chain,
+        transport: http(),
     })
     
     const owner = toWebAuthnAccount({ credential })
