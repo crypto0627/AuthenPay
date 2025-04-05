@@ -4,14 +4,15 @@ import { Dispatch, SetStateAction, useEffect } from "react"
 import { Address } from "viem"
 import { SenderBlock } from "./senderBlock"
 
-export function Sender({ transferDatas, amount, receiver, toChain }: {
+export function Sender({ transferDatas, amount, receiver, toChain, processCount }: {
     amount: number,
     receiver: Address,
     toChain: 'base'| 'eth' | 'ava' | 'polygon' | 'arb'
     transferDatas: {
         transferDatas: transferData,
         setTransferDatas: Dispatch<SetStateAction<transferData>>
-    }
+    },
+    processCount: number
 }) {
 
     const { balance } = useMe()
@@ -35,6 +36,7 @@ export function Sender({ transferDatas, amount, receiver, toChain }: {
                             key={`senderBlock-${index}`}
                             fromChain={ts.fromChain}
                             amount={ts.amount}
+                            status={index < processCount ? 2 : index == processCount ? 1 : 0}
                         />
                     )
                 })

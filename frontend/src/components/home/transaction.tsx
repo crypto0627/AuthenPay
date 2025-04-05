@@ -75,7 +75,7 @@ export default function Transaction({ activeTab, address }: { activeTab: "balanc
                         
                         return {
                             ...chain,
-                            balance: matchedData ? `$${matchedData.balance}` : "$0"
+                            balance: matchedData ? `$${matchedData.balance.toFixed(2)}` : "$0"
                         };
                     })
                 );

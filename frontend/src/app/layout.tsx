@@ -35,8 +35,8 @@ export default function RootLayout({
         }}
       >
         <MeProvider>
-          <div className="w-full h-full items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-mono)]">
-            <div className="w-full max-w-[450px] sm:w-[400px] sm:h-[650px] rounded-[24px] flex justify-center glass overflow-y-scroll">
+          <div className="w-full h-full items-center justify-items-center min-h-screen sm:py-16 gap-16 font-[family-name:var(--font-geist-mono)]">
+            <div className="w-full h-full max-w-[450px] sm:w-[400px] sm:h-[650px] rounded-[24px] flex justify-center glass overflow-y-scroll">
               {children}          
             </div>
           </div>

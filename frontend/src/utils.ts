@@ -47,3 +47,16 @@ export function formatAddress(address: string) {
     navigator.clipboard.writeText(value);
     console.log("Copied the text: " + value);
 }
+
+
+function addOneUpToN(arr: number[], n: number): number[] {
+  for (let i = 0; i <= n; i++) {
+    // If it's already 3, keep it at 3;
+    // otherwise increment by 1.
+    if (arr[i] < 3) {
+      arr[i] += 1;
+    }
+  }
+  
+  return arr;
+}
