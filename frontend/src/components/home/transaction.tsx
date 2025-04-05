@@ -47,7 +47,7 @@ export default function Transaction({ activeTab, address }: { activeTab: "balanc
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        address: address || '0x5C16e64Eac8bf0e8CE0d6f6eAb0b73918cfB0a96'
+                        address: address
                     }),
                 });
                 
@@ -146,7 +146,7 @@ export default function Transaction({ activeTab, address }: { activeTab: "balanc
                                 <div className="grid grid-cols-2 gap-4">
                                     {chains.map((chain, index) => (
                                         <React.Fragment key={chain.name}>
-                                            <div className="p-3 bg-gray-50 rounded-lg flex items-center justify-start text-black gap-4">
+                                            <div className="p-3 flex items-center justify-start text-black gap-4">
                                                 <div className="flex-shrink-0 gap-2">
                                                     <Image src={chain.icon} alt={chain.name.toLowerCase()} width={24} height={24} className="rounded-full bg-black" />
                                                 </div>
@@ -154,7 +154,7 @@ export default function Transaction({ activeTab, address }: { activeTab: "balanc
                                                     <p className="text-lg font-bold mt-1">{chain.name}</p>
                                                 </div>
                                             </div>
-                                            <div className="p-3 bg-gray-50 rounded-lg flex items-center justify-center gap-2 text-black">
+                                            <div className="p-3 flex items-center justify-center gap-2 text-black">
                                                 <p className="text-2xl font-light">{chain.balance}</p>
                                                 <p className="font-medium">{chain.currency}</p>
                                             </div>
