@@ -7,12 +7,15 @@ import { toCoinbaseSmartAccount, toWebAuthnAccount } from "viem/account-abstract
 import { Address, createPublicClient, http } from "viem";
 import { baseSepolia } from "viem/chains";
 import { FeatureList } from "@/components/home/featureList";
+import Transaction from "@/components/home/transaction";
+import { Checkout } from "@/components/home/checkout";
 
 export default function Home() {
 
     const { isMounted, me } = useMe()
     const [address, setAddress] = useState<Address>("0x")
-    
+    const [activeTab, setActiveTab] = useState<"balance" | "transactions">("balance");
+
     const router = useRouter();
 
     useEffect(() => {
@@ -56,6 +59,12 @@ export default function Home() {
             </div>
             <UserBalance address={address} />
             <FeatureList />
+            <div className="w-full h-full flex flex-col">
+                <Checkout activeTab={activeTab} setActiveTab={setActiveTab} />
+                <div className="flex overflow-y-auto max-h-[200px] w-full">
+                    <Transaction activeTab={activeTab} address={address}/>
+                </div>
+            </div>
         </div>
     )
 }
