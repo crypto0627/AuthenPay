@@ -10,6 +10,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --breakpoint-xs: 30rem;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -41,7 +42,7 @@ body {
 
 .glass6 {
   /* other styles */
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.6);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 }

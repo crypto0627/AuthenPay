@@ -36,7 +36,7 @@ export default function RootLayout({
       >
         <MeProvider>
           <div className="w-full h-full items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-mono)]">
-            <div className="w-full sm:w-[400px] sm:h-[650px] rounded-[24px] flex items-center justify-center glass6">
+            <div className="w-full max-w-[450px] sm:w-[400px] sm:h-[650px] rounded-[24px] flex justify-center glass">
               {children}          
             </div>
           </div>
