@@ -5,8 +5,8 @@ import { Address } from "viem";
 import { createWebAuthnCredential } from "viem/account-abstraction";
 
 export type Me = {
-  keyId: string;
-  pubKey: `0x${string}`
+  id: string;
+  publicKey: `0x${string}`
 };
 
 function useMeHook() {
@@ -32,7 +32,7 @@ function useMeHook() {
       })
       localStorage.setItem("walletCredential", jsonn)
       
-      setMe({ keyId: credential.id, pubKey: credential.publicKey })
+      setMe({ id: credential.id, publicKey: credential.publicKey })
       setIsMounted(true)
     } catch(e) {
       console.log("User reject the request QAQ")

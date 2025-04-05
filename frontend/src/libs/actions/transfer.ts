@@ -11,12 +11,14 @@ export async function transferUSDC(
         publicKey: `0x${string}`
 }): Promise<Hex> {
 
+    console.log(to, amount)
+
     const usdc: Address = USDCAddress(chain)
     
     const transferCallData = encodeFunctionData({
         abi: erc20Abi,
         functionName: 'transfer',
-        args: [to, amount as any],
+        args: [to, (amount as any * 1000000) as any],
     })
 
     const transactionHash = await pimlicoUSDCPaymaster({

@@ -58,9 +58,10 @@ export async function pimlicoUSDCPaymaster({ credential, chain, rawCalls }: {
         },
     })
     
-    var usdc: Address = USDCAddress(chain)
+    var usdc = USDCAddress(chain)
     const smartAccountAddress = bundlerClient.account.address
     
+    console.log(usdc)
     
     const senderUsdcBalance = await publicClient.readContract({
         abi: parseAbi(["function balanceOf(address account) returns (uint256)"]),
