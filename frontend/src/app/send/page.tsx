@@ -1,7 +1,7 @@
 "use client"
+import { Suspense } from 'react';
 import { Receiver } from '@/components/transfer/receiver';
 import { transferUSDC } from '@/libs/actions/transfer';
-import { pimlicoUSDCPaymaster } from '@/libs/paymaster/paymaster';
 import { useMe } from '@/providers/Me';
 import { chainNameMap } from '@/utils';
 import { useRouter } from 'next/navigation'
@@ -30,12 +30,14 @@ export default function Send() {
             <div className="text-black text-2xl text-center">
                 Transfer USDC
             </div>
-            <Receiver 
-                confirm={{ isConfirm: isConfirm, setIsConfirm: setIsConfirm }}
-                chain={{ selected: selected, setSelected: setSelected }}
-                receiver={{ receiverAddr: receiverAddr, setReceiverAddr: setReceiverAddr }}
-                amount={{ amount: amount, setAmount: setAmount }}
-            />
+            <Suspense>
+                <Receiver 
+                    confirm={{ isConfirm: isConfirm, setIsConfirm: setIsConfirm }}
+                    chain={{ selected: selected, setSelected: setSelected }}
+                    receiver={{ receiverAddr: receiverAddr, setReceiverAddr: setReceiverAddr }}
+                    amount={{ amount: amount, setAmount: setAmount }}
+                />
+            </Suspense>
             {
                 isConfirm &&
                 <div>
