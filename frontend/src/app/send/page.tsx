@@ -21,6 +21,8 @@ export default function Send() {
     const [receiverAddr, setReceiverAddr] = useState<string>("")
     const [amount, setAmount] = useState<number | "">("")
     const [transferDatas, setTransferDatas] = useState<transferData>([])
+    const [processCount, setProcessCount] = useState<number>(-1)
+    const [complete, setIsComplete] = useState<boolean>(false)
 
     return (
         <div className="relative py-6 flex flex-col items-center">
@@ -35,16 +37,20 @@ export default function Send() {
             <div className="text-black text-2xl text-center">
                 Transfer USDC
             </div>
-            <Suspense>
-                <Receiver 
-                    confirm={{ isConfirm: isConfirm, setIsConfirm: setIsConfirm }}
-                    chain={{ selected: selected, setSelected: setSelected }}
-                    receiver={{ receiverAddr: receiverAddr, setReceiverAddr: setReceiverAddr }}
-                    amount={{ amount: amount, setAmount: setAmount }}
-                />
-            </Suspense>
             {
-                isConfirm &&
+                !complete
+                &&
+                <Suspense>
+                    <Receiver 
+                        confirm={{ isConfirm: isConfirm, setIsConfirm: setIsConfirm }}
+                        chain={{ selected: selected, setSelected: setSelected }}
+                        receiver={{ receiverAddr: receiverAddr, setReceiverAddr: setReceiverAddr }}
+                        amount={{ amount: amount, setAmount: setAmount }}
+                    />
+                </Suspense>
+            }
+            {
+                isConfirm && !complete &&
                 <div
                 >
                     <Sender
@@ -52,20 +58,29 @@ export default function Send() {
                         receiver={receiverAddr as any}
                         toChain={selected}
                         transferDatas={{ transferDatas: transferDatas, setTransferDatas: setTransferDatas }}
+                        processCount={processCount}
                     />
                     <div className='w-full flex justify-end px-4'>
                         <div>
                             <button
                                 className="px-6 py-3 text-black cursor-pointer button-35 w-[120px]"
                                 onClick={async () => {
-                                    const res = await transferAggr(transferDatas, { id: me?.id as any, publicKey: me?.publicKey as any })
+                                    const res = await transferAggr(transferDatas, { id: me?.id as any, publicKey: me?.publicKey as any }, setProcessCount)
+                                    console.log(res)
+                                    setIsComplete(true)
                                 }}
-                                disabled={transferDatas.length == 0}
+                                disabled={transferDatas.length == 0 || processCount > 0}
                             >
                                 Transfer
                             </button>
                         </div>
                     </div>
+                </div>
+            }
+            {
+                complete &&
+                <div className='py-12 text-4xl'>
+                    Good Good
                 </div>
             }
         </div>

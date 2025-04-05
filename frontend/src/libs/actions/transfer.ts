@@ -9,7 +9,8 @@ export async function transferUSDC(
     credential: {
         id: string,
         publicKey: `0x${string}`
-}): Promise<Hex> {
+    }
+): Promise<Hex> {
 
     console.log(to, amount)
 
@@ -18,7 +19,7 @@ export async function transferUSDC(
     const transferCallData = encodeFunctionData({
         abi: erc20Abi,
         functionName: 'transfer',
-        args: [to, (amount as any * 1000000n) as any],
+        args: [to, (amount) as any],
     })
 
     const transactionHash = await pimlicoUSDCPaymaster({
