@@ -7,7 +7,7 @@ import TransactionItem from "./transactionItem";
 import { Chain, Transaction_Form } from "@/types/transaction-type";
 
 export default function Transaction({ activeTab, address }: { activeTab: "balance" | "transactions", address: string }) {
-    const { getBalance, balance } = useMe();
+    const { balance } = useMe();
     const [chains, setChains] = useState<Chain[]>([
         {
             name: "Base",

@@ -20,14 +20,17 @@ export function UserBalance({ address }: {
     });
 
     useEffect(() => {
-        if (balance) {
-            let sum = 0;
-            Object.values(balance).forEach(value => {
-                sum += value;
-            });
-            setTotalBalance(sum);
+        const fetchBalance = async () => {
+            if (balance) {
+                let sum = 0;
+                Object.values(balance).forEach(value => {
+                    sum += value;
+                });
+                setTotalBalance(sum);
+            }
         }
-    }, [balance]);
+        fetchBalance()
+    }, [balance])
 
     return (
         <div

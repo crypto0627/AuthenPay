@@ -47,7 +47,6 @@ function useMeHook() {
       setMe({ id: credential.id, publicKey: credential.publicKey })
       setIsMounted(true)
       getAddress({ id: credential.id, publicKey: credential.publicKey})
-      getBalance()
     } catch(e) {
       console.log("User reject the request QAQ")
     }
@@ -58,8 +57,8 @@ function useMeHook() {
     
   }
 
-  async function getBalance() {
-    const _balance = await userBalanceData(address)
+  async function getBalance(addr: Address) {
+    const _balance = await userBalanceData(addr)
     setBalance(_balance)
   }
 
@@ -78,6 +77,7 @@ function useMeHook() {
       owners: [owner], 
     })
     setAddress(account.address)
+    getBalance(account.address)
   }
 
   useEffect(() => {
@@ -85,10 +85,10 @@ function useMeHook() {
     if (me) {
       try {
         const parsed = JSON.parse(me)
+        console.log(parsed)
         setMe(parsed);
         setIsMounted(true);
         getAddress({ id: parsed.id, publicKey: parsed.publicKey})
-        getBalance()
       } catch (e) {
         console.log("error while parsing me");
       }
@@ -102,8 +102,7 @@ function useMeHook() {
     create,
     disconnect,
     address,
-    balance,
-    getBalance
+    balance
   };
 }
 
