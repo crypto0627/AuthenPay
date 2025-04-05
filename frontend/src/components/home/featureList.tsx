@@ -6,10 +6,10 @@ export function FeatureList() {
         <div
             className="w-[330px] flex justify-between"
         >
-            <FeatureBlock feature="Send"/>
-            <FeatureBlock feature="Receive"/>
-            <FeatureBlock feature="Swap"/>
-            <FeatureBlock feature="Earn"/>
+            <FeatureBlock feature="Send" icon="send" />
+            <FeatureBlock feature="Receive" icon="receive" />
+            <FeatureBlock feature="Swap" icon="swap" />
+            <FeatureBlock feature="Earn" icon="earn" />
         </div>
     )
 }

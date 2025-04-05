@@ -1,33 +1,91 @@
 'use client'
 
-import React from "react";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ArrowUpRight, ArrowDownLeft } from "lucide-react";
 import Image from "next/image";
 
-export default function Transaction() {
-    const [activeTab, setActiveTab] = useState<"balance" | "transactions">("balance");
-    
-    const chains = [
+export default function Transaction({ activeTab, address }: { activeTab: "balance" | "transactions", address: string }) {
+    const [chains, setChains] = useState([
         {
             name: "Base",
             icon: "/base.png",
-            balance: "$2000",
+            balance: "$0",
             currency: "USDC"
         },
         {
             name: "Ethereum",
             icon: "/ethereum.png",
-            balance: "$3500",
+            balance: "$0",
             currency: "USDC"
         },
         {
             name: "Avalanche",
             icon: "/avalanche.png",
-            balance: "$1200",
+            balance: "$0",
+            currency: "USDC"
+        },
+        {
+            name: "Arbitrum",
+            icon: "/arbitrum.png",
+            balance: "$0",
+            currency: "USDC"
+        },
+        {
+            name: "Polygon",
+            icon: "/polygon.png",
+            balance: "$0",
             currency: "USDC"
         }
-    ];
+    ]);
+
+    useEffect(() => {
+        const fetchBalances = async () => {
+            try {
+                const response = await fetch('https://alchemy-api.jake0627a1.workers.dev/balance', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        address: address || '0x5C16e64Eac8bf0e8CE0d6f6eAb0b73918cfB0a96'
+                    }),
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch balance data');
+                }
+                
+                const data = await response.json();
+                
+                // Map chain names to more readable formats
+                const chainMapping: { [key: string]: string } = {
+                    'base-sepolia': 'Base',
+                    'sepolia': 'Ethereum',
+                    'avalanche-fuji': 'Avalanche',
+                    'arbitrum-sepolia': 'Arbitrum',
+                    'polygon-amoy': 'Polygon'
+                };
+                
+                // Update chains with fetched balances
+                setChains(prevChains => 
+                    prevChains.map(chain => {
+                        const matchedData = data.find((item: any) => 
+                            chainMapping[item.chain] === chain.name
+                        );
+                        
+                        return {
+                            ...chain,
+                            balance: matchedData ? `$${matchedData.balance}` : "$0"
+                        };
+                    })
+                );
+            } catch (error) {
+                console.error('Error fetching balances:', error);
+            }
+        };
+        
+        fetchBalances();
+    }, []);
 
     const transactions = [
         {
@@ -81,38 +139,23 @@ export default function Transaction() {
         }
     };
     return (
-        <div className="row-span-1 flex flex-col">
-                    <div className="flex justify-center items-center gap-8 mb-1">
-                        <button 
-                            className={`font-medium transition-colors ${activeTab === "balance" ? "text-blue-500" : "text-gray-600 hover:text-blue-500"}`}
-                            onClick={() => setActiveTab("balance")}
-                        >
-                            Balance
-                        </button>
-                        <button 
-                            className={`font-medium transition-colors ${activeTab === "transactions" ? "text-blue-500" : "text-gray-600 hover:text-blue-500"}`}
-                            onClick={() => setActiveTab("transactions")}
-                        >
-                            Transactions
-                        </button>
-                    </div>
-                    <div className="w-full h-[2px] bg-gray-200"></div>
-                    <div className="flex-1 overflow-y-auto">
+        <div className="flex flex-col w-full">
+            <div className="w-full h-[2px] bg-gray-200"></div>
                         {activeTab === "balance" ? (
                             <div className="p-4">
                                 <div className="grid grid-cols-2 gap-4">
                                     {chains.map((chain, index) => (
                                         <React.Fragment key={chain.name}>
-                                            <div className="p-3 bg-gray-50 rounded-lg flex items-center justify-start gap-3 text-black">
-                                                <div className="flex-shrink-0">
-                                                    <Image src={chain.icon} alt={chain.name.toLowerCase()} width={32} height={32} className="rounded-full bg-black" />
+                                            <div className="p-3 bg-gray-50 rounded-lg flex items-center justify-start text-black gap-4">
+                                                <div className="flex-shrink-0 gap-2">
+                                                    <Image src={chain.icon} alt={chain.name.toLowerCase()} width={24} height={24} className="rounded-full bg-black" />
                                                 </div>
                                                 <div className="flex flex-col">
-                                                    <p className="text-xl font-bold mt-1">{chain.name}</p>
+                                                    <p className="text-lg font-bold mt-1">{chain.name}</p>
                                                 </div>
                                             </div>
                                             <div className="p-3 bg-gray-50 rounded-lg flex items-center justify-center gap-2 text-black">
-                                                <p className="text-2xl font-bold">{chain.balance}</p>
+                                                <p className="text-2xl font-light">{chain.balance}</p>
                                                 <p className="font-medium">{chain.currency}</p>
                                             </div>
                                         </React.Fragment>
@@ -120,9 +163,9 @@ export default function Transaction() {
                                 </div>
                             </div>
                         ) : (
-                            <div className="px-4 py-2">
+                            <div className="px-4 py-2 w-full max-w-full">
                                 {transactions.map((transaction, index) => (
-                                    <div key={index} className="mb-3 p-3 bg-gray-50 rounded-lg flex items-center justify-between text-black">
+                                    <div key={index} className="mb-3 p-3 bg-gray-50 rounded-lg flex items-center justify-between text-black w-full">
                                         <div className="flex items-center gap-3">
                                             <div className="flex-shrink-0">
                                                {transaction.method === "To" ? <ArrowUpRight /> : <ArrowDownLeft />}
@@ -147,7 +190,6 @@ export default function Transaction() {
                                 ))}
                             </div>
                         )}
-                    </div>
                 </div>
     )
 }

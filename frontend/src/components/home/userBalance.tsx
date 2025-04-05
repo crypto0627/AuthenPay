@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+'use client'
+
+import { useEffect, useState, useDeferredValue } from "react";
 import { Address } from "viem";
 
 export function UserBalance({ address }: {
@@ -14,17 +16,43 @@ export function UserBalance({ address }: {
       day: 'numeric',
     });
 
-    const [balance, setBalance] = useState<number>(1000000)
+    const [balance, setBalance] = useState<number>(0)
 
-    useEffect(() => {
-        balanceInit()
-    }, [])
-
-    async function balanceInit() {
-
-        setBalance(0)
+    const fetchBalanceData = async (userAddress: string) => {
+        try {
+            const response = await fetch('https://alchemy-api.jake0627a1.workers.dev/balance', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    address: '0x5C16e64Eac8bf0e8CE0d6f6eAb0b73918cfB0a96'
+                }),
+            });
+            
+            if (!response.ok) {
+                throw new Error('Failed to fetch balance data');
+            }
+            
+            const data = await response.json();
+            let totalBalance = 0;
+            data.forEach((chainData: any) => {
+                totalBalance += chainData.balance;
+            });
+            
+            return totalBalance;
+        } catch (error) {
+            console.error('Error fetching balance:', error);
+            return 0;
+        }
     }
 
+    useEffect(() => {
+        (async () => {
+            const balanceData = await fetchBalanceData(address);
+            setBalance(balanceData);
+        })();
+    }, [address]);
 
     return (
         <div

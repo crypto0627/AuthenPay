@@ -1,9 +1,10 @@
 import { Hono } from 'hono'
 import { AlchemyHistoryResponse, AlchemyResponse, BlockResponse, ChainResult, HistoryResult, Transfer } from './types'
 import { ethers } from 'ethers';
+import { cors } from 'hono/cors'
 
 const app = new Hono()
-
+app.use('*', cors())
 // Common constants
 const DEFAULT_ADDRESS = "0x5C16e64Eac8bf0e8CE0d6f6eAb0b73918cfB0a96";
 const URLS = {
@@ -13,6 +14,14 @@ const URLS = {
   'arbitrum-sepolia': 'https://arb-sepolia.g.alchemy.com/v2/hR5uamq-K43YZYAJldc7lpxZ2MOv0Qbk',
   'polygon-amoy': 'https://polygon-amoy.g.alchemy.com/v2/hR5uamq-K43YZYAJldc7lpxZ2MOv0Qbk'
 };
+
+const USDC_ADDRESSES = {
+  'base-sepolia': '0x036CbD53842c5426634e7929541eC2318f3dCF7e',
+  'sepolia': '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238',
+  'avalanche-fuji': '0x5425890298aed601595a70ab815c96711a31bc65',
+  'arbitrum-sepolia': '0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d',
+  'polygon-amoy': '0x41e94eb019c0762f9bfcf9fb1e58725bfb0e7582'
+}
 
 const HEADERS = {
   'Accept': 'application/json',
@@ -71,18 +80,31 @@ app.post('/balance', async (c) => {
     
     const results = await Promise.all(chainPromises);
     
-    // Format the results according to the required structure
+    // Format the results according to the USDC_ADDRESSES structure
     const formattedResults = results.map(result => {
       if (result.error) {
         return {
           chain: result.chain,
-          tokenBalances: []
+          balance: 0
         };
       }
       
+      const tokenBalances = result.data?.result?.tokenBalances || [];
+      const chainUsdcAddress = USDC_ADDRESSES[result.chain as keyof typeof USDC_ADDRESSES]?.toLowerCase();
+      
+      // Find the USDC token balance for this chain
+      const usdcBalance = tokenBalances.find(token => 
+        token.contractAddress?.toLowerCase() === chainUsdcAddress
+      );
+      
+      // Convert hex balance to decimal if found, otherwise return 0
+      const balance = usdcBalance?.tokenBalance 
+        ? parseInt(usdcBalance.tokenBalance, 16) / Math.pow(10, 6) // Assuming USDC has 6 decimals
+        : 0;
+      
       return {
         chain: result.chain,
-        tokenBalances: result.data?.result?.tokenBalances || []
+        balance: balance
       };
     });
     
