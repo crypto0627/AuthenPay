@@ -7,7 +7,7 @@ import TransactionItem from "./transactionItem";
 import { Chain, Transaction_Form } from "@/types/transaction-type";
 
 export default function Transaction({ activeTab, address }: { activeTab: "balance" | "transactions", address: string }) {
-    const { balance, getBalance } = useMe();
+    const { getBalance, balance } = useMe();
     const [chains, setChains] = useState<Chain[]>([
         {
             name: "Base",
@@ -82,28 +82,28 @@ export default function Transaction({ activeTab, address }: { activeTab: "balanc
     useEffect(() => {
         const fetchAndUpdateBalances = async () => {
             try {
-                await getBalance();
-                
+                await getBalance()
                 if (balance) {
                     const chainMapping: { [key: string]: string } = {
                         'base': 'Base',
                         'eth': 'Ethereum',
                         'ava': 'Avalanche',
                         'arb': 'Arbitrum',
-                        'polygon': 'Polygon'
-                    };
-                    
-                    setChains(prevChains => 
-                        prevChains.map(chain => {
+                            'polygon': 'Polygon'
+                        };
+                        
+                    setChains(prevChains => {
+                        const updatedChains = prevChains.map(chain => {
                             const chainKey = Object.entries(chainMapping).find(([_, value]) => value === chain.name)?.[0];
-                            const chainBalance = chainKey ? balance[chainKey] : 0;
+                            const chainBalance = chainKey && balance[chainKey] !== undefined ? balance[chainKey] : 0;
                             
                             return {
                                 ...chain,
                                 balance: `$${chainBalance}`
                             };
-                        })
-                    );
+                        });
+                        return updatedChains;
+                    });
                 }
             } catch (error) {
                 console.error("Failed to fetch balance:", error);
@@ -132,7 +132,7 @@ export default function Transaction({ activeTab, address }: { activeTab: "balanc
                 </div>
             ) : (
                 <div className="px-4 py-2 w-full max-w-full">
-                    {transactions.map((transaction, index) => (
+                    {transactions.map((transaction: Transaction_Form, index: number) => (
                         <TransactionItem
                             key={index}
                             method={transaction.method}
