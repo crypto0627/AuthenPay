@@ -83,7 +83,6 @@ export default function Transaction({ activeTab, address }: { activeTab: "balanc
     useEffect(() => {
         const fetchAndUpdateBalances = async () => {
             try {
-                await getBalance()
                 if (balance) {
                     const chainMapping: { [key: string]: string } = {
                         'base': 'Base',
@@ -100,7 +99,7 @@ export default function Transaction({ activeTab, address }: { activeTab: "balanc
                             
                             return {
                                 ...chain,
-                                balance: `$${chainBalance}`
+                                balance: `$${chainBalance.toPrecision(2)}`
                             };
                         });
                         return updatedChains;
