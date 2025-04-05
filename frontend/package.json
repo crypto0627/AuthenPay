@@ -11,7 +11,9 @@
   "dependencies": {
     "lucide-react": "^0.487.0",
     "next": "15.2.4",
+    "next-pwa": "^5.6.0",
     "permissionless": "^0.2.39",
+    "qrcode.react": "^4.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "viem": "^2.25.0"
