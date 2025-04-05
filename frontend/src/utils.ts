@@ -1,4 +1,4 @@
-import { Chain } from "viem";
+import { Address, Chain } from "viem";
 import { baseSepolia, avalancheFuji, arbitrumSepolia, sepolia, polygonAmoy } from "viem/chains"
 
 const validChains = ['base', 'eth', 'ava', 'polygon', 'arb'] as const;

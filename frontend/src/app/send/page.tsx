@@ -6,6 +6,8 @@ import { useMe } from '@/providers/Me';
 import { chainNameMap } from '@/utils';
 import { useRouter } from 'next/navigation'
 import { useState } from 'react';
+import { Sender } from '@/components/transfer/sender';
+import { transferData } from '@/transferStrategy';
 
 export default function Send() {
     const router = useRouter();
@@ -16,6 +18,7 @@ export default function Send() {
     const [selected, setSelected] = useState<'base' | 'eth' | 'ava' | 'polygon' | 'arb'>('base');
     const [receiverAddr, setReceiverAddr] = useState<string>("")
     const [amount, setAmount] = useState<number | "">("")
+    const [transferDatas, setTransferDatas] = useState<transferData>([])
 
     return (
         <div className="relate py-6 flex flex-col items-center">
@@ -40,23 +43,35 @@ export default function Send() {
             </Suspense>
             {
                 isConfirm &&
-                <div>
-                    <button
-                        className="px-6 py-3 text-black cursor-pointer button-35 w-[120px]"
-                        onClick={async () => {
-                            transferUSDC(
-                                receiverAddr as any,
-                                amount as any,
-                                chainNameMap[selected],
-                                {
-                                    id: me?.id as any,
-                                    publicKey: me?.publicKey as any
-                                }
-                            )
-                        }}
-                    >
-                        Transfer
-                    </button>
+                <div
+                >
+                    <Sender
+                        amount={amount as any}
+                        receiver={receiverAddr as any}
+                        toChain={selected}
+                        transferDatas={{ transferDatas: transferDatas, setTransferDatas: setTransferDatas }}
+                    />
+                    <div className='w-full flex justify-end px-4'>
+                        <div>
+                            <button
+                                className="px-6 py-3 text-black cursor-pointer button-35 w-[120px]"
+                                onClick={async () => {
+                                    transferUSDC(
+                                        receiverAddr as any,
+                                        amount as any,
+                                        chainNameMap[selected],
+                                        {
+                                            id: me?.id as any,
+                                            publicKey: me?.publicKey as any
+                                        }
+                                    )
+                                }}
+                                disabled={transferDatas.length == 0}
+                            >
+                                Transfer
+                            </button>
+                        </div>
+                    </div>
                 </div>
             }
         </div>
