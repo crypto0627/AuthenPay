@@ -17,9 +17,6 @@ export default function Home() {
 
     const router = useRouter();
 
-    console.log(address)
-    console.log(balance)
-
     useEffect(() => {
         if(!isMounted) {
             router.push('/');

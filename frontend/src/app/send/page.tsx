@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { Sender } from '@/components/transfer/sender';
 import { transferData } from '@/transferStrategy';
 import { transferAggr } from '@/libs/actions/transferAggr';
+import { ChevronLeftIcon } from 'lucide-react';
 
 export default function Send() {
     const router = useRouter();
@@ -24,14 +25,14 @@ export default function Send() {
     const [complete, setIsComplete] = useState<boolean>(false)
 
     return (
-        <div className="relate py-6 flex flex-col items-center">
+        <div className="relative py-6 flex flex-col items-center">
             <div
-                className="absolute bg-black w-[48px] h-[48px] left-4 top-4 cursor-pointer"
+                className="absolute w-[48px] h-[48px] left-4 top-6 cursor-pointer"
                 onClick={() => {
                     router.push('/home');
                 }}
             >
-
+                <ChevronLeftIcon className="w-8 h-8 text-gray-400" />
             </div>
             <div className="text-black text-2xl text-center">
                 Transfer USDC

@@ -59,7 +59,7 @@ function useMeHook() {
   }
 
   async function getBalance() {
-    const _balance = await userBalanceData("0xa238EA849895BE20A96b6181D5b2ba167eBa2Db7")
+    const _balance = await userBalanceData(address)
     setBalance(_balance)
   }
 
@@ -102,7 +102,8 @@ function useMeHook() {
     create,
     disconnect,
     address,
-    balance
+    balance,
+    getBalance
   };
 }
 
