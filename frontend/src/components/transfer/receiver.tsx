@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useSearchParams } from 'next/navigation';
 import { formatAddress, isValidChain } from "@/utils";
 import { ReceiverInfo } from "./receiverInfo";
+import { ChevronUpIcon, ChevronDownIcon } from 'lucide-react';
 
 export function Receiver({ confirm, chain, receiver, amount }: {
     confirm: {
@@ -26,6 +27,15 @@ export function Receiver({ confirm, chain, receiver, amount }: {
     const _receiver = searchParams.get('receiver');
     const _chain = searchParams.get('chain');
     const _amount = searchParams.get('amount');
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+
+    const chainOptions = [
+        { value: 'base', label: 'Base' },
+        { value: 'eth', label: 'Ethereum' },
+        { value: 'ava', label: 'Avalanche' },
+        { value: 'polygon', label: 'Polygon' },
+        { value: 'arb', label: 'Arbitrum' }
+    ];
 
     useEffect(() => {
         if(_receiver) {
@@ -45,10 +55,10 @@ export function Receiver({ confirm, chain, receiver, amount }: {
 
     return(
         <div
-            className="w-[330px] py-4 px-4 text-black glass my-4 rounded-[24px] text-black"
+            className="w-[330px] py-4 px-4 glass my-4 rounded-[24px] text-black"
         >
             <div className="flex justify-between text-2xl">
-                <div>To</div>
+                <h1 className="text-black">To</h1>
                 {confirm.isConfirm && <div>{formatAddress(receiver.receiverAddr)}</div>}
             </div>
             {
@@ -81,13 +91,34 @@ export function Receiver({ confirm, chain, receiver, amount }: {
                             background: "linear-gradient(-225deg, #E3FDF5 0%, #FFE6FA 100%)"
                         }}
                     >
-                        <select value={chain.selected} onChange={(e) => chain.setSelected(e.target.value as any)} className="px-4 py-2 text-black bg-gray-200/20 rounded-[10px] w-full">
-                            <option value="base">Base</option>
-                            <option value="eth">Ethereum</option>
-                            <option value="ava">Avalanche</option>
-                            <option value="polygon">Polygon</option>
-                            <option value="arb">Arbitrum</option>
-                        </select>
+                        <div className="relative">
+                            <div 
+                                className="px-4 py-2 text-black bg-gray-200/20 rounded-[10px] w-full flex justify-between items-center cursor-pointer"
+                                onClick={() => setIsOpen(!isOpen)}
+                            >
+                                <span>{chainOptions.find(option => option.value === chain.selected)?.label}</span>
+                                {isOpen ? 
+                                    <ChevronUpIcon className="w-5 h-5" /> : 
+                                    <ChevronDownIcon className="w-5 h-5" />
+                                }
+                            </div>
+                            {isOpen && (
+                                <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-[10px] shadow-lg z-10">
+                                    {chainOptions.map((option) => (
+                                        <div 
+                                            key={option.value}
+                                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer first:rounded-t-[10px] last:rounded-b-[10px]"
+                                            onClick={() => {
+                                                chain.setSelected(option.value as any);
+                                                setIsOpen(false);
+                                            }}
+                                        >
+                                            {option.label}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
                     </div>
                     <div
                     className="p-[2px] rounded-[12px] border border-white w-[300px]"
