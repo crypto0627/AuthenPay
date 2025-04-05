@@ -80,7 +80,7 @@ export async function transferAggr(
         }
 
         if(count < transferDatas.length - 1) {
-            singleTransferIteration({tx: transferDatas[count + 1], count: count + 1})
+            const cc = await singleTransferIteration({tx: transferDatas[count + 1], count: count + 1})
         } else {
             return
         }
