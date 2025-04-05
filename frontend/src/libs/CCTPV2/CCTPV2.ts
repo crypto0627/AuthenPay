@@ -33,7 +33,7 @@ export async function TransferCCTP({ fromChain, ToChain, amount, to, credential 
             },
           ],
           functionName: 'approve',
-          args: [TokenMessengerV2[fromChain], BigInt(amount) + 5000n], // Set max allowance in 10^6 subunits (10,000 USDC; change as needed)
+          args: [TokenMessengerV2[fromChain], 10_000_000_000n], // Set max allowance in 10^6 subunits (10,000 USDC; change as needed)
         }),
     }
 

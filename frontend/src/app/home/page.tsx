@@ -12,7 +12,7 @@ import { Checkout } from "@/components/home/checkout";
 
 export default function Home() {
 
-    const { isMounted, me, address, balance } = useMe()
+    const { isMounted, me, address, balance, disconnect } = useMe()
     const [activeTab, setActiveTab] = useState<"balance" | "transactions">("balance");
 
     const router = useRouter();
@@ -26,7 +26,15 @@ export default function Home() {
     }, [isMounted])
 
     return (
-        <div className="w-full px-2 sm:px-8 py-16 flex flex-col items-center gap-[24px]">
+        <div className="relative w-full px-2 sm:px-8 py-16 flex flex-col items-center gap-[24px]">
+            <div 
+                className="absolute w-5 h-5 top-0 right-0"
+                onClick={() => {
+                    disconnect()
+                }}
+            >
+
+            </div>
             <div
                 className="text-2xl text-gray-400 w-[300px]"
             >
