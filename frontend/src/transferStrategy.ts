@@ -43,7 +43,7 @@ export function buildTransferPlan(
   // 2) Otherwise, toChain is one of 'ava', 'sepolia', 'base'.
   //    Cross-chain bridging among these three is allowed.
   // ---------------------------------------------
-  const bridgingChains: chain[] = ['ava', 'eth', 'base'];
+  const bridgingChains: chain[] = ['eth', 'base'];
 
   // We'll compare two plans:
   //    (A) Use partial from `toChain` + bridging remainder
