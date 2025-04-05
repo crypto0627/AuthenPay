@@ -4,7 +4,7 @@
 </div>
 
 ## 🚀 Our contracts address and Demo link
-- 📹 Demo video: [https://www.youtube.com/shorts/cVRBoSA7kPo](https://www.youtube.com/shorts/cVRBoSA7kPo)
+- 📹 Demo video: [https://youtu.be/o-FmgGV4sMw?si=NOwjKSYNOsAzaBgn](https://youtu.be/o-FmgGV4sMw?si=NOwjKSYNOsAzaBgn)
 
 ## 🌟 Short Description
 A wallet-less USDC payment across multiple chains—delivering smooth, secure, seamless Web3 payments.
@@ -12,7 +12,7 @@ A wallet-less USDC payment across multiple chains—delivering smooth, secure, s
 ## 📝 Introduction
 **AuthenPay** is a USDC wallet purpose-built for Web3 payments. By leveraging EIP-4337 Account Abstraction, users can transact without connecting a traditional wallet. Instead, Passkey authentication enables secure and passwordless login to create a smart wallet. Through **Circle CCTP V2**, AuthenPay enables seamless cross-chain USDC transfers between Base, Ethereum, Avalanche, and **Polygon**. Users can scan to pay, receive USDC via QR code, and track their transaction history across chains in real-time and raise gasless ux with paymaster.
 
-## 🛠️ Technical stack
+## 🛠️ Technical
 
 ### 💼 Smart Accounts with EIP-4337
 We leveraged ERC-4337 account abstraction to create smart contract wallets that don't require browser wallet extensions or seed phrases. Users onboard using Passkey for biometric login — bringing Web2 simplicity to Web3 security.
@@ -29,12 +29,36 @@ We built a WebSocket-based listener to track USDC payment status live — includ
 ### 📜 On-chain History via Alchemy
 For full USDC activity tracking, we integrated Alchemy's Multichain APIs to fetch token balances and transaction history across all supported networks.
 
-### 💰 Auto Refill Logic
-When a user's USDC balance is low, we prompt them with auto swap from supported network. This logic is conditionally triggered at the time of payment initiation.
-
 ### 💸 Real World Payment App
 AuthenPay serves as a **real world payment app** that bridges the gap between traditional finance and blockchain technology, making it easy for everyday users to make payments using USDC on **Polygon** and other networks.
 
 ### 🎨 Frontend
 The interface is built with Next.js + Tailwind CSS 4, offering a responsive and mobile-friendly experience that mimics popular Web2 payment apps.
+
+# How it work?
+1. Create Your Account
+Enter your name and click the "Create" button to start onboarding.
+
+2. Passkey Authentication
+Choose a passkey storage method (e.g., device-based biometric auth).
+This replaces traditional wallet logins with secure, passwordless authentication.
+
+3. Generate Smart Wallet (EIP-4337)
+A smart contract wallet is automatically generated using EIP-4337 — no MetaMask or seed phrases required.
+
+4. Choose Your Network
+Select the blockchain network (Base, Ethereum, Avalanche, or Polygon) to perform USDC transactions.
+
+5. Start Transaction
+
+6. Send USDC by scanning a recipient QR code.
+
+7. Receive USDC via your own QR code.
+
+8. Enjoy gasless transactions thanks to our Paymaster backend.
+
+9. Monitor payment status in real-time via WebSocket.
+
+10. Track Your Activity
+View your USDC balances and transaction history across chains with Alchemy Multichain API.
 
