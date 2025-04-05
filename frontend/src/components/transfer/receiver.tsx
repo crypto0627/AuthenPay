@@ -1,3 +1,4 @@
+'use client'
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useSearchParams } from 'next/navigation';
 import { formatAddress, isValidChain } from "@/utils";
