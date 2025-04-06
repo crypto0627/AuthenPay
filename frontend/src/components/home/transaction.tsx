@@ -7,7 +7,7 @@ import TransactionItem from "./transactionItem";
 import { Chain, Transaction_Form } from "@/types/transaction-type";
 
 export default function Transaction({ activeTab }: { activeTab: "balance" | "transactions", address: string }) {
-    const { balance, records, address } = useMe();
+    const { balance, records, address, isLoading } = useMe();
     const [chains, setChains] = useState<Chain[]>([
         {
             name: "Base",
@@ -78,8 +78,8 @@ export default function Transaction({ activeTab }: { activeTab: "balance" | "tra
         <div className="flex flex-col w-full">
             <div className="w-full h-[2px] bg-gray-200"></div>
             {activeTab === "balance" ? (
-                <div className="p-4">
-                    <div className="grid grid-cols-2 gap-4">
+                <div className="p-2">
+                    <div className="flex flex-col gap-4 items-center">
                         {chains.map((chain) => (
                             <ChainItem
                                 key={chain.name}
