@@ -84,3 +84,7 @@ export function formatTimestamp(isoString: string): string {
 
   return `${monthShort} ${day}, ${time}`;
 }
+
+export function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}

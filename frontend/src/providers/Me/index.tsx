@@ -3,6 +3,7 @@
 import { record } from "@/services/record";
 import { userBalanceData } from "@/services/userBalance";
 import { TransactionRecord } from "@/types/record";
+import { sleep } from "@/utils";
 import { createContext, useContext, useEffect, useState } from "react";
 import { Address, createPublicClient, http } from "viem";
 import { createWebAuthnCredential, toCoinbaseSmartAccount, toWebAuthnAccount } from "viem/account-abstraction";
@@ -33,6 +34,13 @@ function useMeHook() {
     localStorage.removeItem("walletCredential");
     setMe(null);
     setIsMounted(false)
+  }
+
+  async function Update() {
+    setIsLoading(true)
+    const r1 = await getBalance(address)
+    const r2 = await getRecords(address)
+    setIsLoading(false)
   }
 
   async function create(
@@ -102,6 +110,9 @@ function useMeHook() {
     }
   }, []);
 
+  useEffect(() => {
+  }, [address])
+
   return {
     isLoading,
     isMounted,
@@ -110,7 +121,8 @@ function useMeHook() {
     disconnect,
     address,
     balance,
-    records
+    records,
+    Update
   };
 }
 

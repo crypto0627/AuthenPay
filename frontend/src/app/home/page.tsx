@@ -3,16 +3,14 @@ import { UserBalance } from "@/components/home/userBalance";
 import { useMe } from "@/providers/Me";
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation'
-import { toCoinbaseSmartAccount, toWebAuthnAccount } from "viem/account-abstraction";
-import { Address, createPublicClient, http } from "viem";
-import { baseSepolia } from "viem/chains";
 import { FeatureList } from "@/components/home/featureList";
 import Transaction from "@/components/home/transaction";
 import { Checkout } from "@/components/home/checkout";
+import { IterationCcw } from "lucide-react";
 
 export default function Home() {
 
-    const { isMounted, me, address, balance, disconnect } = useMe()
+    const { isMounted, me, address, isLoading, disconnect, Update } = useMe()
     const [activeTab, setActiveTab] = useState<"balance" | "transactions">("balance");
 
     const router = useRouter();
@@ -28,12 +26,19 @@ export default function Home() {
     return (
         <div className="relative w-full px-2 sm:px-8 py-16 flex flex-col items-center gap-[24px]">
             <div 
-                className="absolute w-5 h-5 top-0 right-0"
+                className="absolute w-1 h-1 top-0 right-0"
                 onClick={() => {
                     disconnect()
                 }}
             >
-
+            </div>
+            <div 
+                className="absolute w-15 h-15 top-4 -right-2"
+                onClick={() => {
+                    if(!isLoading) Update()
+                }}
+            >
+                <IterationCcw width={32} height={32} className="text-blue-300"/>
             </div>
             <div
                 className="text-2xl text-gray-400 w-[300px]"
