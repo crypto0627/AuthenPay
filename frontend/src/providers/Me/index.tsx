@@ -81,8 +81,10 @@ function useMeHook() {
       owners: [owner], 
     })
     setAddress(account.address)
-    getBalance(account.address)
-    getRecords(account.address)
+    setIsLoading(true)
+    const r1 = await getBalance(account.address)
+    const r2 = await getRecords(account.address)
+    setIsLoading(false)
   }
 
   useEffect(() => {
