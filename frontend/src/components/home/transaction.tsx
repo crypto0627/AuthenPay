@@ -92,7 +92,7 @@ export default function Transaction({ activeTab }: { activeTab: "balance" | "tra
                     </div>
                 </div>
             ) : (
-                <div className="px-4 py-2 w-full max-w-full">
+                <div className="px-4 py-2 w-full max-w-full flex flex-col items-center">
                     {records && records.map((tx: any, index: number) => (
                         <TransactionItem
                             key={index}
@@ -102,6 +102,7 @@ export default function Transaction({ activeTab }: { activeTab: "balance" | "tra
                             amount={tx.amount}
                             ens={tx.ToAddress}
                             address={tx.fromaddress == address ? tx.toaddress: tx.fromaddress}
+                            tx={tx}
                         />
                     ))}
                 </div>

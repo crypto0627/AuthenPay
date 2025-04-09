@@ -1,5 +1,7 @@
 import { Address, Chain } from "viem";
 import { baseSepolia, avalancheFuji, arbitrumSepolia, sepolia, polygonAmoy } from "viem/chains"
+import { twMerge } from 'tailwind-merge'
+import { clsx, type ClassValue } from 'clsx'
 
 const validChains = ['base', 'eth', 'ava', 'polygon', 'arb'] as const;
 export const chainDisplayNameMap: Record<string, string> = {
@@ -16,6 +18,14 @@ export const chainNameMap: Record<string, Chain> = {
     arb: arbitrumSepolia,
     eth: sepolia,
     polygon: polygonAmoy,
+};
+
+export const chainExploreMap: Record<string, string> = {
+  base: "https://sepolia.basescan.org/tx/",
+  ava: "https://subnets-test.avax.network/c-chain/tx/",
+  arb: "https://sepolia.arbiscan.io/tx/",
+  eth: "https://sepolia.etherscan.io/tx/",
+  polygon: "https://web3.okx.com/explorer/amoy/tx/",
 };
 
 export const chainNameMapAPI: Record<string, string> = {
@@ -87,4 +97,8 @@ export function formatTimestamp(isoString: string): string {
 
 export function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
 }

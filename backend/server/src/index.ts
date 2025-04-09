@@ -84,5 +84,5 @@ app.listen(port, () => {
         console.log('🔁 每 5 秒執行一次 syncTransactions()', new Date().toISOString());
         // 可以呼叫你真正要執行的 function
         CCTPRelayer()
-    }, 15000);
+    }, 45000);
 });

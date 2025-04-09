@@ -1,7 +1,7 @@
 import { Address, Chain, encodeFunctionData } from "viem"
 import { USDCAddress } from "../paymaster/configs/config"
 import { chainNameMap } from "@/utils"
-import { CCTPIDV2, MessageTransmitterV2, TokenMessengerV2 } from "./config"
+import { CCTPIDV2, TokenMessengerV2 } from "./config"
 import { pimlicoUSDCPaymaster } from "../paymaster/paymaster"
 
 export async function TransferCCTP({ fromChain, ToChain, amount, to, credential }: {
