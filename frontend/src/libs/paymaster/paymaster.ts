@@ -1,16 +1,13 @@
-import { toSimpleSmartAccount } from "permissionless/accounts"
 import { createPimlicoClient } from "permissionless/clients/pimlico"
-import { createPublicClient, encodeFunctionData, getAddress, type Hex, http, parseAbi, erc20Abi, Chain, Address } from "viem"
+import { createPublicClient, type Hex, http, parseAbi, Chain, Address } from "viem"
 import {
 	createBundlerClient,
-	createWebAuthnCredential,
 	entryPoint06Address,
 	toCoinbaseSmartAccount,
 	toWebAuthnAccount,
 	UserOperation,
 	type EntryPointVersion,
 } from "viem/account-abstraction"
-import { baseSepolia, avalancheFuji, arbitrumSepolia, sepolia, polygonAmoy } from "viem/chains"
 import { USDCAddress } from "./configs/config"
 
 export async function pimlicoUSDCPaymaster({ credential, chain, rawCalls }: {
@@ -115,7 +112,7 @@ export async function pimlicoUSDCPaymaster({ credential, chain, rawCalls }: {
             hash,
         })
         console.log(`transactionHash: ${opReceipt.receipt.transactionHash}`)
-        return hash
+        return opReceipt.receipt.transactionHash
     } catch(e) {
         return "0x"
     }

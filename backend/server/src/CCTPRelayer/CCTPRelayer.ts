@@ -5,13 +5,13 @@ import { CCTPIDV2, MessageTransmitterV2 } from './config';
 import { createWalletClient, encodeFunctionData, Hex, http } from 'viem';
 import { chainNameMap } from './utils';
 import { privateKeyToAccount } from 'viem/accounts';
+import { updateTransactionStatus } from '../db/CCTPRelayUpdate';
 
 dotenv.config();
 
 const PRIVATE_KEY=process.env.PRIVATE_KEY
 const account = privateKeyToAccount(`0x${PRIVATE_KEY}`)
 
-// src/db.ts 中已經 export 了 pool
 export async function getActiveCCTPTransactions(): Promise<TransactionRecord[]> {
   const query = `
     SELECT * FROM transactions
@@ -30,47 +30,31 @@ export async function getActiveCCTPTransactions(): Promise<TransactionRecord[]> 
 
 
 export async function CCTPRelayer() {
-    const txs = await getActiveCCTPTransactions()
-    console.log(txs)
-    try {
-      const attestationsPending = txs.map((tx) => {
-        return new Promise(async (resolve, reject) => {
-          const att = await retrieveAttestation(tx.TxHash as any, CCTPIDV2[tx.ToChain])
-          if(att) {
-            resolve({
-              att: att,
-              toChain: tx.ToChain
-            })
-          } else {
-            resolve(null)
-          }
-        })
-      })
-  
-      const attestations = await Promise.all(attestationsPending)
-  
-      const mintUSDCPending = attestations.map((attt: any) => {
-        return new Promise(async (resolve, reject) => {
-          if(attt) {
-            const CCTPHash = await mintUSDC({
-              attestation: attt.att,
-              chain: attt.toChain
-            })
-            resolve(CCTPHash)
-          } else {
-            resolve(null)
-          }
-        })
-      })
-  
-      const mintUSDCs = await Promise.all(mintUSDCPending)
-      return mintUSDCs  
-    } catch {
-      return []
+  const txs = await getActiveCCTPTransactions()
+  var c = 0
+
+  async function relayer(txs: TransactionRecord[], count: number) {
+    const attestation = await retrieveAttestation((txs[count] as any).txhash, CCTPIDV2[(txs[count] as any).fromchain])
+    if(attestation) {
+      const mintHash = await mintUSDC({ attestation: attestation, chain: (txs[count] as any).tochain as any })
+      if(mintHash) {
+        //store mintHash as CCTPHash
+        const isUpdate = await updateTransactionStatus((txs[count] as any).txhash, 2, mintHash)
+      }
     }
+
+    if(count < txs.length - 1) {
+      const next = await relayer(txs, count + 1)
+    }
+    return
+  }
+
+  try {
+    const iteration = await relayer(txs, c)
+  } catch(e) {
+    console.log(e)
+  }
 }
-
-
 
 async function mintUSDC({ attestation, chain }: {
   attestation: {
@@ -85,31 +69,35 @@ async function mintUSDC({ attestation, chain }: {
     account,
   })
 
-  const mintTx = await client.sendTransaction({
-    to: MessageTransmitterV2[chain],
-    data: encodeFunctionData({
-      abi: [
-        {
-          type: 'function',
-          name: 'receiveMessage',
-          stateMutability: 'nonpayable',
-          inputs: [
-            { name: 'message', type: 'bytes' },
-            { name: 'attestation', type: 'bytes' },
-          ],
-          outputs: [],
-        },
-      ],
-      functionName: 'receiveMessage',
-      args: [attestation.message as any, attestation.attestation as any],
-    }),
-  })
-  console.log(`Mint Tx: ${mintTx}`)
+  try {
+    const mintTx = await client.sendTransaction({
+      to: MessageTransmitterV2[chain],
+      data: encodeFunctionData({
+        abi: [
+          {
+            type: 'function',
+            name: 'receiveMessage',
+            stateMutability: 'nonpayable',
+            inputs: [
+              { name: 'message', type: 'bytes' },
+              { name: 'attestation', type: 'bytes' },
+            ],
+            outputs: [],
+          },
+        ],
+        functionName: 'receiveMessage',
+        args: [attestation.message as any, attestation.attestation as any],
+      }),
+    })
+    console.log(`Mint Tx: ${mintTx}`)
+    return mintTx
+  } catch(e) {
+    console.error('❌ Failed to mint USDC:', e);
+  }
 }
 
-export async function retrieveAttestation(transactionHash: Hex, toChainDomain: number) {
-  console.log('Retrieving attestation...');
-  const url = `https://iris-api-sandbox.circle.com/v2/messages/${toChainDomain}?transactionHash=${transactionHash}`;
+export async function retrieveAttestation(transactionHash: Hex, fromChainDomain: number) {
+  const url = `https://iris-api-sandbox.circle.com/v2/messages/${fromChainDomain}?transactionHash=${transactionHash}`;
 
   try {
     const response = await fetch(url);
@@ -123,13 +111,13 @@ export async function retrieveAttestation(transactionHash: Hex, toChainDomain: n
         console.log('Attestation retrieved successfully!');
         console.log(data.messages[0])
         return data.messages[0];
+      } else {
+        console.error('Error fetching attestation', "| Tx: ", transactionHash); 
       }
-
-      console.log('Waiting for attestation...');
     }
 
   } catch (error: any) {
-    console.error('Error fetching attestation:', error?.message || error);
+    console.error('Error fetching attestation:', error?.message || error, "| Tx: ", transactionHash);
   }
 }
 
