@@ -1,0 +1,42 @@
+{
+  "name": "authenpay",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "pnpm run format && turbo build ",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "lint:fix": "turbo run lint -- --fix",
+    "format": "prettier --write \"**/*.{js,ts,tsx,vue,md,json}\""
+  },
+  "devDependencies": {
+    "jakelint": "^1.0.11",
+    "prettier": "^3.4.2",
+    "turbo": "^2.4.0",
+    "typescript": "5.7.3"
+  },
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "all",
+    "semi": false,
+    "useTabs": false,
+    "tabWidth": 2,
+    "bracketSpacing": true,
+    "bracketSameLine": false,
+    "arrowParens": "always",
+    "overrides": [
+      {
+        "files": "*.json",
+        "options": {
+          "printWidth": 80,
+          "tabWidth": 2,
+          "useTabs": false
+        }
+      }
+    ]
+  }
+}
