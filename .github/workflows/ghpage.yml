@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./frontend
+        working-directory: ./apps/frontend
 
     steps:
       - name: Check out code
@@ -31,7 +31,6 @@ jobs:
         with:
           node-version: 20
           cache: 'pnpm'
-          cache-dependency-path: './frontend/pnpm-lock.yaml'
 
       - name: Install dependencies
         run: pnpm install
